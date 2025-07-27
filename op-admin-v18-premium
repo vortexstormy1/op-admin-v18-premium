@@ -10,7 +10,20 @@ local character = player.Character or player.CharacterAdded:Wait()
 -- Create GUI
 local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
 gui.Name = "OP_ADMIN_GUI_V18"
+gui.ResetOnSpawn = false
 
+-- Toggle Button
+local toggle = Instance.new("TextButton", gui)
+toggle.Size = UDim2.new(0, 120, 0, 40)
+toggle.Position = UDim2.new(0, 10, 0, 10)
+toggle.Text = "Close GUI"
+toggle.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+toggle.TextColor3 = Color3.new(1, 1, 1)
+toggle.Font = Enum.Font.GothamBold
+toggle.TextScaled = true
+toggle.ZIndex = 5
+
+-- Main Frame
 local main = Instance.new("Frame", gui)
 main.Size = UDim2.new(0, 420, 0, 500)
 main.Position = UDim2.new(0.5, -210, 0.5, -250)
@@ -19,6 +32,17 @@ main.BackgroundTransparency = 0.2
 main.BorderSizePixel = 0
 main.Active = true
 main.Draggable = true
+main.Name = "MainFrame"
+
+-- Title
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "To OP ADMIN GUI v18 PREMIUM"
+title.Font = Enum.Font.GothamBlack
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextScaled = true
 
 -- Rainbow animation
 task.spawn(function()
@@ -30,8 +54,16 @@ task.spawn(function()
 	end
 end)
 
+-- GUI toggle logic
+local guiOpen = true
+toggle.MouseButton1Click:Connect(function()
+	guiOpen = not guiOpen
+	main.Visible = guiOpen
+	toggle.Text = guiOpen and "Close GUI" or "Open GUI"
+end)
+
 -- Button creator
-local buttonY = 10
+local buttonY = 50
 local function makeButton(text, callback)
 	local b = Instance.new("TextButton", main)
 	b.Size = UDim2.new(0, 400, 0, 40)
@@ -149,8 +181,7 @@ end)
 
 -- Kill Player
 makeButton("Kill Player", function()
-	local target = game:GetService("Players"):FindFirstChild(
-		gui:GetAttribute("Admin_Target") or "")
+	local target = Players:FindFirstChild(gui:GetAttribute("Admin_Target") or "")
 	if target and target.Character then
 		local hum = target.Character:FindFirstChildWhichIsA("Humanoid")
 		if hum then hum.Health = 0 end
@@ -159,8 +190,7 @@ end)
 
 -- Bring Player
 makeButton("Bring Player", function()
-	local target = game:GetService("Players"):FindFirstChild(
-		gui:GetAttribute("Admin_Target") or "")
+	local target = Players:FindFirstChild(gui:GetAttribute("Admin_Target") or "")
 	if target and target.Character and character then
 		local hrp = character:FindFirstChild("HumanoidRootPart")
 		local thrp = target.Character:FindFirstChild("HumanoidRootPart")
